@@ -2,3 +2,9 @@ discord==2.3.2
 python-dotenv==1.0.1
 uvicorn==0.29.0
 fastapi==0.110.1
+discord.py==2.4.0
+httpx==0.27.0
+openai==1.35.7
+pdfminer==20191125
+pdfminer.six==20231228
+requests==2.31.0
