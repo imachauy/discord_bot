@@ -10,6 +10,7 @@ from server import server_thread
 dotenv.load_dotenv()
 
 TOKEN = os.environ.get("TOKEN")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY2")
 intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
@@ -27,7 +28,7 @@ models = [
     ]
 
 def ebigpt(query, channel_id, authorid):
-    gptclient = OpenAI(api_key=os.environ.get("OPENAI_API_KEY2"))
+    gptclient = OpenAI(api_key=OPENAI_API_KEY)
     content = query.replace("?", "").replace("？", "")
     model = [m for m in models if query.endswith(m)]
 
@@ -49,7 +50,7 @@ def ebigpt(query, channel_id, authorid):
     return response
 
 def ebigpt_thread(query, thread_id, authorid):
-    gptclient = OpenAI(api_key=os.environ.get("OPENAI_API_KEY2"))
+    gptclient = OpenAI(api_key=OPENAI_API_KEY)
     c_log = []
 
     # CSVファイルを開いて、thread_id が一致する行だけを収集
