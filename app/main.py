@@ -2,10 +2,8 @@ import discord
 import dotenv
 import os
 from openai import OpenAI
-import pandas as pd
 import csv
 import base64
-from pathlib import Path
 
 from server import server_thread
 
@@ -51,22 +49,30 @@ def ebigpt(query, channel_id, authorid):
     return response
 
 def ebigpt_thread(query, thread_id, authorid):
-        gptclient = OpenAI(api_key=os.environ.get("OPENAI_API_KEY2"))
-        current_log = pd.read_csv("gptchatlog.csv")
-        c_log = current_log[current_log["thread_id"]==thread_id].reset_index(drop=True)
-        content = ""
-        if len(c_log) == 0:
-            content = query
-        elif len(c_log) > 14:
-            ans = "一つのスレッドで質問できるのは15回までです！別スレッドでお願いします。"
-            return ans
-        else:
-            content += '以下は一連の会話です。会話を踏まえて、最後の問いに答えてください。最後の問いの答えのみを出力してください。'
-            for i in range(len(c_log)):
-                content += 'Q:{}'.format(c_log['prompt'][i])
-                content += 'A:{}'.format(c_log['response'][i])
-            content += 'Q:{}'.format(query)
-            content += 'A:'
+    gptclient = OpenAI(api_key=os.environ.get("OPENAI_API_KEY2"))
+    c_log = []
+
+    # CSVファイルを開いて、thread_id が一致する行だけを収集
+    with open("gptchatlog.csv", newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row["thread_id"] == thread_id:
+                c_log.append(row)
+
+    content = ""
+
+    if len(c_log) == 0:
+        content = query
+    elif len(c_log) > 14:
+        ans = "一つのスレッドで質問できるのは15回までです！別スレッドでお願いします。"
+        return ans
+    else:
+        content += "以下は一連の会話です。会話を踏まえて、最後の問いに答えてください。最後の問いの答えのみを出力してください。"
+        for row in c_log:
+            content += "Q:{}".format(row["prompt"])
+            content += "A:{}".format(row["response"])
+        content += "Q:{}".format(query)
+        content += "A:"
         
         model = [m for m in models if query.endswith(m)]
 
