@@ -130,7 +130,7 @@ async def on_message(message):
 
     # サーバーID チェック
     if message.guild.id not in server_list:
-        print("message from: " + message.guild.id)
+        print("message from: " + str(message.guild.id))
         return  # 指定のサーバーID でなければ無視
 
     if message.content.startswith('$hello'):
