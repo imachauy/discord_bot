@@ -99,7 +99,7 @@ def ebigpt_thread(query, thread_id, authorid):
 
 def dalle(query):
     query = query.replace("$DALLE", "")
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY2"))
+    client = OpenAI(api_key=OPENAI_API_KEY)
     response = client.images.generate(
         model="dall-e-3",
         prompt="I NEED to test how the tool works with extremely simple prompts. DO NOT add any detail, just use it AS-IS:" + query,
@@ -130,6 +130,7 @@ async def on_message(message):
 
     # サーバーID チェック
     if message.guild.id not in server_list:
+        print("message from: " + message.guild.id)
         return  # 指定のサーバーID でなければ無視
 
     if message.content.startswith('$hello'):
