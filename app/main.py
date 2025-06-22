@@ -19,7 +19,7 @@ intents.voice_states = True
 client = discord.Client(intents=intents)
 
 gpt_channel_id = 1265916964258316288
-server_list = [SERVER1, SERVER2]
+server_list = [int(SERVER1), int(SERVER2)]
 
 models = [
         "gpt-4o",
@@ -130,7 +130,6 @@ async def on_message(message):
 
     # サーバーID チェック
     if message.guild.id not in server_list:
-        await message.channel.send(str(message.guild.id))
         return  # 指定のサーバーID でなければ無視
 
     if message.content.startswith('$hello'):
