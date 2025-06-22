@@ -11,12 +11,15 @@ dotenv.load_dotenv()
 
 TOKEN = os.environ.get("TOKEN")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY2")
+SERVER1 = os.environ.get("SERVER1")
+SERVER2 = os.environ.get("SERVER2")
 intents = discord.Intents.default()
 intents.message_content = True
 intents.voice_states = True
 client = discord.Client(intents=intents)
 
 gpt_channel_id = 1265916964258316288
+server_list = [SERVER1, SERVER2]
 
 models = [
         "gpt-4o",
@@ -120,6 +123,14 @@ def dalle(query):
 async def on_message(message):
     if message.author == client.user:
         return
+    
+    # サーバー外（DM）なら無視
+    if message.guild is None:
+        return
+
+    # サーバーID チェック
+    if message.guild.id not in server_list:
+        return  # 指定のサーバーID でなければ無視
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
