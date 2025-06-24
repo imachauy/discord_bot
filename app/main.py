@@ -79,24 +79,23 @@ def ebigpt_thread(query, thread_id, authorid):
         content += "Q:{}".format(query)
         content += "A:"
         
-        model = [m for m in models if query.endswith(m)]
-
-        if model:
-            selected_model = model[0]
-        else:
-            selected_model = "gpt-4.1-nano"
-
-        completion = gptclient.chat.completions.create(
-            model=selected_model,
-            messages=[
-                {"role": "user", "content": content}
-                ]
-        )
-        response = completion.choices[0].message.content
-        with open('gptchatlog.csv', 'a') as f:
-            writer = csv.writer(f)
-            writer.writerow([authorid, thread_id, query.replace(" " + selected_model, "").replace("　" + selected_model, ""), response])
-        return response
+    model = [m for m in models if query.endswith(m)]
+    if model:
+        selected_model = model[0]
+    else:
+        selected_model = "gpt-4.1-nano"
+    
+    completion = gptclient.chat.completions.create(
+        model=selected_model,
+        messages=[
+            {"role": "user", "content": content}
+            ]
+    )
+    response = completion.choices[0].message.content
+    with open('gptchatlog.csv', 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow([authorid, thread_id, query.replace(" " + selected_model, "").replace("　" + selected_model, ""), response])
+    return response
 
 def dalle(query):
     query = query.replace("$DALLE", "")
