@@ -56,12 +56,13 @@ def ebigpt_thread(query, thread_id, authorid):
     gptclient = OpenAI(api_key=OPENAI_API_KEY)
     c_log = []
 
-    # CSVファイルを開いて、thread_id が一致する行だけを収集
-    with open("gptchatlog.csv", newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            if row["thread_id"] == thread_id:
-                c_log.append(row)
+    if os.path.exists("gptchatlog.csv"):
+        # CSVファイルを開いて、thread_id が一致する行だけを収集
+        with open("gptchatlog.csv", newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                if row["thread_id"] == thread_id:
+                    c_log.append(row)
 
     content = ""
 
